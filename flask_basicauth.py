@@ -50,6 +50,11 @@ class BasicAuth(object):
             if not self.authenticate():
                 return self.challenge()
 
+    def _safe_cmp(self, text, check):
+        result = 0
+        for x, y in zip(text, check):
+            result |= ord(x) ^ ord(y)
+
     def check_credentials(self, username, password):
         """
         Check if the given username and password are correct.
@@ -65,7 +70,10 @@ class BasicAuth(object):
         """
         correct_username = current_app.config['BASIC_AUTH_USERNAME']
         correct_password = current_app.config['BASIC_AUTH_PASSWORD']
-        return username == correct_username and password == correct_password
+        return self._safe_cmp(username, correct_username) and self._safe_cmp(
+            password, correct_password
+        )
+
 
     def authenticate(self):
         """
