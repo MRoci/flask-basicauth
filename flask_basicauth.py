@@ -54,6 +54,7 @@ class BasicAuth(object):
         result = 0
         for x, y in zip(text, check):
             result |= ord(x) ^ ord(y)
+        return result == 0
 
     def check_credentials(self, username, password):
         """
